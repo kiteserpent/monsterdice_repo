@@ -8,18 +8,37 @@ public class mob : MonoBehaviour {
 	private int level;
 	private int attack;
 	private int element;
-	private const float Boxwidth = 50f, Boxheight = 10f;
+	private const float Boxwidth = 100f, Boxheight = 14f;
 	private static Texture2D redTexture, greenTexture;
 	private static GUIStyle redStyle, greenStyle, smallfontstyle;
 	private static Vector3 mypos;
 	private Rect rr, baseRR;
+	private SpriteRenderer elementrenderer = null;
+	
+	public Sprite mob0, mob1, mob2;
+	public Sprite element0, element1, element2;
 
 	public void levelup() {
+		SpriteRenderer myrenderer = GetComponent<SpriteRenderer>();
 		++level;
 		maxhp = 10 * level;
 		hp = maxhp;
 		attack = 10 * level;
 		element = Random.Range (0, 4);
+		switch (element) {
+		case 0:
+			myrenderer.sprite = mob0;
+			elementrenderer.sprite = element0;
+			break;
+		case 1:
+			myrenderer.sprite = mob1;
+			elementrenderer.sprite = element1;
+			break;
+		case 2:
+			myrenderer.sprite = mob2;
+			elementrenderer.sprite = element2;
+			break;
+		}
 	}
 
 	// Use this for initialization
@@ -27,6 +46,8 @@ public class mob : MonoBehaviour {
 		mypos = Camera.main.WorldToScreenPoint(transform.position);
 		baseRR = new Rect(mypos.x - Boxwidth/2f, Screen.height - mypos.y - 24f - Boxheight, Boxwidth, Boxheight);
 		rr = new Rect();
+		GameObject elementframe = (transform.Find("element_sprite")).gameObject;
+		elementrenderer = elementframe.GetComponent<SpriteRenderer>();
 		level = 0;
 		maxhp = 1;
 		if (redTexture == null)
@@ -45,7 +66,7 @@ public class mob : MonoBehaviour {
 		greenStyle.normal.background = greenTexture;
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 10;
+		smallfontstyle.fontSize = 12;
 		smallfontstyle.alignment = TextAnchor.LowerCenter;
 
 		levelup ();
@@ -53,7 +74,6 @@ public class mob : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
 	void OnGUI () {
@@ -65,8 +85,8 @@ public class mob : MonoBehaviour {
 		rr.y = Screen.height - mypos.y - 24f;
 		rr.width = rr.height = 0f;
 		GUI.Label(rr, hp.ToString() + " / " + maxhp.ToString(), smallfontstyle);
-		rr.x += 40f;
-		rr.y += 20f;
-		GUI.Label (rr, "ATK: " + attack.ToString ());
+		rr.x += 50f;
+		rr.y += 40f;
+		GUI.Label (rr, "ATK: " + attack.ToString(), smallfontstyle);
 	}
 }
