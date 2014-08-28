@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class main_control : MonoBehaviour {
 	private int health;
 	private int maxhealth;
+	private bool can_reroll;
+	private string handname = "";
 
 	private Rect textpos;
 	private const float Boxwidth = 400f, Boxheight = 24f;
@@ -13,14 +16,14 @@ public class main_control : MonoBehaviour {
 	private int[] adjustment_multipliers = new int[4];
 	private int[] adjusted_totals = new int[4];
 
-	public GameObject[] dice_objects;
+	public die[] dice_scripts = new die[5];
 	public GameObject mob_object;
-	private die[] dice_scripts = new die[5];
-	private mob mob_script = new mob();
+	private mob mob_script;
 
 	// Use this for initialization
 	void Start () {
 		health = maxhealth = 250;
+		can_reroll = true;
 		if (redTexture == null) {
 			redTexture = new Texture2D( 1, 1 );
 			redTexture.SetPixel( 0, 0, new Color(1f, 0.1f, 0.1f ));
@@ -29,6 +32,8 @@ public class main_control : MonoBehaviour {
 		if (redStyle == null) {
 			redStyle = new GUIStyle();
 			redStyle.normal.background = redTexture;
+			redStyle.normal.textColor = Color.red;
+			redStyle.fontSize = 20;
 		}
 		if (greenTexture == null) {
 			greenTexture = new Texture2D( 1, 1 );
@@ -48,12 +53,16 @@ public class main_control : MonoBehaviour {
 		smallfontstyle.normal.textColor = Color.black;
 		smallfontstyle.fontSize = 20;
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
-		dice_scripts[0] = dice_objects[0].GetComponent<die>();
-		dice_scripts[1] = dice_objects[1].GetComponent<die>();
-		dice_scripts[2] = dice_objects[2].GetComponent<die>();
-		dice_scripts[3] = dice_objects[3].GetComponent<die>();
-		dice_scripts[4] = dice_objects[4].GetComponent<die>();
+
+		GameObject[] dda = GameObject.FindGameObjectsWithTag("die");
+		int ii = 0;
+		foreach ( GameObject dd in dda)
+		{
+			dice_scripts[ii++] = dd.GetComponent<die>();
+		}
 		mob_script = mob_object.GetComponent<mob>();
+
+		calculate();
 	}
 
 	void calculate() {
@@ -61,9 +70,92 @@ public class main_control : MonoBehaviour {
 		for (element_index=0; element_index<4; ++element_index) {
 			element_totals[element_index] = 0;
 		}
-		for (die_index=0; die_index<5; ++die_index) {
-			element_totals[dice_scripts[die_index].suit] +=
-				dice_scripts[die_index].pips * dice_scripts[die_index].multiplier;
+		foreach ( die dd in dice_scripts ) {
+			dd.multiplier = 1;
+		}
+		handname = "";
+
+		// cheap sort
+		int fd, sd;
+		die tmp;
+		for (fd=0; fd<4; ++fd) {
+			for (sd=fd+1; sd<5; ++sd) {
+				if (dice_scripts[fd].pips > dice_scripts[sd].pips) {
+					tmp = dice_scripts[fd];
+					dice_scripts[fd] = dice_scripts[sd];
+					dice_scripts[sd] = tmp;
+				}
+			}
+		}
+		// analyze hands
+		bool flush_flag =
+				(dice_scripts[0].suit == dice_scripts[1].suit) &&
+				(dice_scripts[0].suit == dice_scripts[2].suit) &&
+				(dice_scripts[0].suit == dice_scripts[3].suit) &&
+				(dice_scripts[0].suit == dice_scripts[4].suit);
+		bool straight_flag =
+				(dice_scripts[0].pips == dice_scripts[1].pips - 1) &&
+				(dice_scripts[1].pips == dice_scripts[2].pips - 1) &&
+				(dice_scripts[2].pips == dice_scripts[3].pips - 1) &&
+				(dice_scripts[3].pips == dice_scripts[4].pips - 1);
+		if (dice_scripts[0].pips == dice_scripts[4].pips) {
+			handname = "Five of a Kind";
+			foreach ( die dd in dice_scripts )
+				dd.multiplier = 10;
+		} else if (straight_flag && flush_flag) {
+			handname = "Straight Flush";
+			foreach ( die dd in dice_scripts )
+				dd.multiplier = 10;
+		} else if (dice_scripts[0].pips == dice_scripts[3].pips) {
+			handname = "Four of a Kind";
+			dice_scripts[0].multiplier = dice_scripts[1].multiplier = dice_scripts[2].multiplier = dice_scripts[3].multiplier = 8;
+		} else if (dice_scripts[1].pips == dice_scripts[4].pips) {
+			handname = "Four of a Kind";
+			dice_scripts[1].multiplier = dice_scripts[2].multiplier = dice_scripts[3].multiplier = dice_scripts[4].multiplier = 8;
+		} else if (((dice_scripts[0].pips == dice_scripts[1].pips) && (dice_scripts[2].pips == dice_scripts[4].pips)) ||
+		           ((dice_scripts[0].pips == dice_scripts[2].pips) && (dice_scripts[3].pips == dice_scripts[4].pips))) {
+			handname = "Full House";
+			foreach ( die dd in dice_scripts )
+				dd.multiplier = 8;
+		} else if (straight_flag || flush_flag) {
+			handname = straight_flag ? "Straight" : "Flush";
+			foreach ( die dd in dice_scripts )
+				dd.multiplier = 4;
+		} else if (dice_scripts[0].pips == dice_scripts[2].pips) {
+			handname = "Three of a Kind";
+			dice_scripts[0].multiplier = dice_scripts[1].multiplier = dice_scripts[2].multiplier = 3;
+		} else if (dice_scripts[1].pips == dice_scripts[3].pips) {
+			handname = "Three of a Kind";
+			dice_scripts[1].multiplier = dice_scripts[2].multiplier = dice_scripts[3].multiplier = 3;
+		} else if (dice_scripts[2].pips == dice_scripts[4].pips) {
+			handname = "Three of a Kind";
+			dice_scripts[2].multiplier = dice_scripts[3].multiplier = dice_scripts[4].multiplier = 3;
+		} else {
+			int pair_count = 0;
+			if (dice_scripts[0].pips == dice_scripts[1].pips) {
+				++pair_count;
+				dice_scripts[0].multiplier = dice_scripts[1].multiplier = 2;
+			}
+			if (dice_scripts[1].pips == dice_scripts[2].pips) {
+				++pair_count;
+				dice_scripts[1].multiplier = dice_scripts[2].multiplier = 2;
+			}
+			if (dice_scripts[2].pips == dice_scripts[3].pips) {
+				++pair_count;
+				dice_scripts[2].multiplier = dice_scripts[3].multiplier = 2;
+			}
+			if (dice_scripts[3].pips == dice_scripts[4].pips) {
+				++pair_count;
+				dice_scripts[3].multiplier = dice_scripts[4].multiplier = 2;
+			}
+			if (pair_count == 1)
+				handname = "Pair";
+			if (pair_count == 2)
+				handname = "Two Pair";
+		}
+
+		foreach ( die dd in dice_scripts ) {
+			element_totals[dd.suit] += dd.pips * dd.multiplier;
 		}
 		switch (mob_script.element) {
 		case 0:
@@ -95,6 +187,18 @@ public class main_control : MonoBehaviour {
 	}
 	
 	void OnGUI () {
+		calculate();
+		textpos.x = 90f;
+		textpos.y = 400f;
+		textpos.width = textpos.height = 0f;
+		GUI.Label(textpos, adjusted_totals[0].ToString(), adjusted_totals[0] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 235f;
+		GUI.Label(textpos, adjusted_totals[1].ToString(), adjusted_totals[1] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 360f;
+		GUI.Label(textpos, adjusted_totals[2].ToString(), adjusted_totals[2] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 235f;
+		textpos.y = 450f;
+		GUI.Label(textpos, adjusted_totals[3].ToString(), smallfontstyle);
 		textpos.x = (Screen.width - Boxwidth) / 2f;
 		textpos.y = Screen.height - 2f * Boxheight;
 		textpos.width = Boxwidth;
@@ -103,8 +207,10 @@ public class main_control : MonoBehaviour {
 		textpos.width = Boxwidth * health / maxhealth;
 		GUI.Box(textpos,  GUIContent.none, greenStyle);
 		textpos.x = Screen.width / 2f;
-		textpos.y = Screen.height - 24f;
+		textpos.y = Screen.height - 34f;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, health.ToString() + " / " + maxhealth.ToString(), smallfontstyle);
+		textpos.y = 240f;
+		GUI.Label(textpos, handname, bigfontstyle);
 	}
 }

@@ -47,7 +47,7 @@ public class die : MonoBehaviour {
 			break;
 		case 2: suitrenderer.sprite = suit2;
 			break;
-		case 3: default: suitrenderer.sprite = suit3;
+		case 3: suitrenderer.sprite = suit3;
 			break;
 		}
 	}
@@ -63,14 +63,14 @@ public class die : MonoBehaviour {
 		unlockme();
 		enableme();
 		rollme();
-		multiplier = Random.Range(1, 11);
+		multiplier = 1;
 		bigfontstyle = new GUIStyle();
 		bigfontstyle.normal.textColor = Color.black;
 		bigfontstyle.fontSize = 24;
 		bigfontstyle.alignment = TextAnchor.MiddleCenter;
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 18;
+		smallfontstyle.fontSize = 14;
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
 	}
 	
@@ -84,13 +84,13 @@ public class die : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		textpos.x = mypos.x;
-		textpos.y = Screen.height - mypos.y;
+		textpos.x = mypos.x + 10f;
+		textpos.y = Screen.height - mypos.y - 1f;
 		string ss = pips.ToString();
 		GUI.Label(textpos, ss, bigfontstyle);
 		if (multiplier > 1) {
 			textpos.x += 4f;
-			textpos.y += 4f;
+			textpos.y += 21f;
 			GUI.Label(textpos, "x" + multiplier.ToString(), smallfontstyle);
 		}
 	}
