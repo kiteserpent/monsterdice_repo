@@ -3,16 +3,16 @@ using System.Collections;
 
 public class mob : MonoBehaviour {
 
-	private int hp;
-	private int maxhp;
-	private int level;
-	private int attack;
-	private int element;
+	public int hp;
+	public int maxhp;
+	public int level;
+	public int attack;
+	public int element;
 	private const float Boxwidth = 100f, Boxheight = 14f;
 	private static Texture2D redTexture, greenTexture;
 	private static GUIStyle redStyle, greenStyle, smallfontstyle;
 	private static Vector3 mypos;
-	private Rect rr, baseRR;
+	private Rect textpos, basetextpos;
 	private SpriteRenderer elementrenderer = null;
 	
 	public Sprite mob0, mob1, mob2;
@@ -44,26 +44,30 @@ public class mob : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mypos = Camera.main.WorldToScreenPoint(transform.position);
-		baseRR = new Rect(mypos.x - Boxwidth/2f, Screen.height - mypos.y - 24f - Boxheight, Boxwidth, Boxheight);
-		rr = new Rect();
+		basetextpos = new Rect(mypos.x - Boxwidth/2f, Screen.height - mypos.y - 24f - Boxheight, Boxwidth, Boxheight);
+		textpos = new Rect();
 		GameObject elementframe = (transform.Find("element_sprite")).gameObject;
 		elementrenderer = elementframe.GetComponent<SpriteRenderer>();
 		level = 0;
 		maxhp = 1;
-		if (redTexture == null)
+		if (redTexture == null) {
 			redTexture = new Texture2D( 1, 1 );
-		if (greenTexture == null)
-			greenTexture = new Texture2D( 1, 1 );
-		if (redStyle == null)
+			redTexture.SetPixel( 0, 0, new Color(1f, 0.1f, 0.1f ));
+			redTexture.Apply();
+		}
+		if (redStyle == null) {
 			redStyle = new GUIStyle();
-		if (greenStyle == null)
+			redStyle.normal.background = redTexture;
+		}
+		if (greenTexture == null) {
+			greenTexture = new Texture2D( 1, 1 );
+			greenTexture.SetPixel( 0, 0, new Color(0.1f, 1f, 0.1f ));
+			greenTexture.Apply();
+		}
+		if (greenStyle == null) {
 			greenStyle = new GUIStyle();
-		redTexture.SetPixel( 0, 0, new Color(1f, 0.1f, 0.1f ));
-        redTexture.Apply();
-		redStyle.normal.background = redTexture;
-		greenTexture.SetPixel( 0, 0, new Color(0.1f, 1f, 0.1f ));
-		greenTexture.Apply();
-		greenStyle.normal.background = greenTexture;
+			greenStyle.normal.background = greenTexture;
+		}
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
 		smallfontstyle.fontSize = 12;
@@ -77,16 +81,16 @@ public class mob : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		rr = baseRR;
-		GUI.Box(rr,  GUIContent.none, redStyle);
-		rr.width = Boxwidth * hp / maxhp;
-		GUI.Box(rr,  GUIContent.none, greenStyle);
-		rr.x = mypos.x;
-		rr.y = Screen.height - mypos.y - 24f;
-		rr.width = rr.height = 0f;
-		GUI.Label(rr, hp.ToString() + " / " + maxhp.ToString(), smallfontstyle);
-		rr.x += 50f;
-		rr.y += 40f;
-		GUI.Label (rr, "ATK: " + attack.ToString(), smallfontstyle);
+		textpos = basetextpos;
+		GUI.Box(textpos,  GUIContent.none, redStyle);
+		textpos.width = Boxwidth * hp / maxhp;
+		GUI.Box(textpos,  GUIContent.none, greenStyle);
+		textpos.x = mypos.x;
+		textpos.y = Screen.height - mypos.y - 24f;
+		textpos.width = textpos.height = 0f;
+		GUI.Label(textpos, hp.ToString() + " / " + maxhp.ToString(), smallfontstyle);
+		textpos.x += 50f;
+		textpos.y += 40f;
+		GUI.Label (textpos, "ATK: " + attack.ToString(), smallfontstyle);
 	}
 }

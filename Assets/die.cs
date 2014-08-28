@@ -4,10 +4,13 @@ using System.Collections;
 public class die : MonoBehaviour {
 
 	private bool locked;
-	private int pips;
-	private int suit;
-	private int multiplier;
+	private bool unlockable;
+	public int pips;
+	public int suit;
+	public int multiplier;
 
+	private Vector3 mypos;
+	private Rect textpos;
 	private GameObject lockframe = null;
 	private SpriteRenderer suitrenderer = null;
 	private GUIStyle bigfontstyle = null;
@@ -25,6 +28,15 @@ public class die : MonoBehaviour {
 		lockframe.SetActive(locked);
 	}
 
+	public void enableme() {
+		unlockable = true;
+	}
+	
+	public void disableme() {
+		unlockable = false;
+		lockme();
+	}
+	
 	public void rollme() {
 		pips = Random.Range(1, 7);
 		suit = Random.Range(0, 4);
@@ -45,7 +57,11 @@ public class die : MonoBehaviour {
 		lockframe = (transform.Find("locked_sprite")).gameObject;
 		GameObject suitframe = (transform.Find("suit_sprite")).gameObject;
 		suitrenderer = suitframe.GetComponent<SpriteRenderer>();
+		mypos = Camera.main.WorldToScreenPoint(transform.position);
+		textpos = new Rect(mypos.x, Screen.height - mypos.y, 0f, 0f);
+
 		unlockme();
+		enableme();
 		rollme();
 		multiplier = Random.Range(1, 11);
 		bigfontstyle = new GUIStyle();
@@ -58,15 +74,24 @@ public class die : MonoBehaviour {
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
 	}
 	
+	void OnMouseUpAsButton() {
+		if (unlockable) {
+			if (locked)
+				unlockme ();
+			else
+				lockme ();
+		}
+	}
+
 	void OnGUI () {
-		Vector3 mypos = Camera.main.WorldToScreenPoint(transform.position);
-		Rect rr = new Rect(mypos.x, Screen.height - mypos.y, 0f, 0f);
+		textpos.x = mypos.x;
+		textpos.y = Screen.height - mypos.y;
 		string ss = pips.ToString();
-		GUI.Label(rr, ss, bigfontstyle);
-		rr.x += 4f;
-		rr.y += 4f;
+		GUI.Label(textpos, ss, bigfontstyle);
 		if (multiplier > 1) {
-			GUI.Label(rr, "x" + multiplier.ToString(), smallfontstyle);
+			textpos.x += 4f;
+			textpos.y += 4f;
+			GUI.Label(textpos, "x" + multiplier.ToString(), smallfontstyle);
 		}
 	}
 
