@@ -89,8 +89,8 @@ public class die : MonoBehaviour {
 		string ss = pips.ToString();
 		GUI.Label(textpos, ss, bigfontstyle);
 		if (multiplier > 1) {
-			textpos.x += 4f;
-			textpos.y += 21f;
+			textpos.x += 10f;
+			textpos.y += 22f;
 			GUI.Label(textpos, "x" + multiplier.ToString(), smallfontstyle);
 		}
 	}

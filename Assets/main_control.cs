@@ -217,22 +217,23 @@ public class main_control : MonoBehaviour {
 
 	}
 	
-	void Update () {
-	
+	void Update(){
+		if (Input.GetKeyDown(KeyCode.Escape)) 
+			Application.Quit(); 
 	}
-	
+
 	void OnGUI () {
 		calculate();
-		textpos.x = 95f;
-		textpos.y = 470f;
+		textpos.x = 195f;
+		textpos.y = 382f;
 		textpos.width = textpos.height = 0f;
-		GUI.Label(textpos, adjusted_totals[0].ToString(), adjusted_totals[0] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 255f;
-		GUI.Label(textpos, adjusted_totals[1].ToString(), adjusted_totals[1] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 400f;
-		GUI.Label(textpos, adjusted_totals[2].ToString(), adjusted_totals[2] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 255f;
-		textpos.y = 540f;
+		GUI.Label(textpos, adjusted_totals[0].ToString(), adjustment_multipliers[0] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 305f;
+		GUI.Label(textpos, adjusted_totals[1].ToString(), adjustment_multipliers[1] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 425f;
+		GUI.Label(textpos, adjusted_totals[2].ToString(), adjustment_multipliers[2] < 0 ? redStyle : smallfontstyle);
+		textpos.x = 195f;
+		textpos.y = 446f;
 		GUI.Label(textpos, adjusted_totals[3].ToString(), smallfontstyle);
 		textpos.x = (Screen.width - Boxwidth) / 2f;
 		textpos.y = Screen.height - 2f * Boxheight;
@@ -242,10 +243,10 @@ public class main_control : MonoBehaviour {
 		textpos.width = Boxwidth * health / maxhealth;
 		GUI.Box(textpos,  GUIContent.none, greenStyle);
 		textpos.x = Screen.width / 2f;
-		textpos.y = Screen.height - 34f;
+		textpos.y = Screen.height - 35f;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, health.ToString() + " / " + maxhealth.ToString(), smallfontstyle);
-		textpos.y = 300f;
+		textpos.y = 498f;
 		GUI.Label(textpos, handname, bigfontstyle);
 	}
 }

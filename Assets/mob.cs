@@ -8,7 +8,7 @@ public class mob : MonoBehaviour {
 	public int level;
 	public int attack;
 	public int element;
-	private const float Boxwidth = 100f, Boxheight = 14f;
+	private const float Boxwidth = 150f, Boxheight = 18f, Boxyoffset = -60f;
 	private static Texture2D redTexture, greenTexture;
 	private static GUIStyle redStyle, greenStyle, smallfontstyle;
 	private static Vector3 mypos;
@@ -23,7 +23,7 @@ public class mob : MonoBehaviour {
 		++level;
 		maxhp = 10 * level;
 		hp = maxhp;
-		attack = 10 * level;
+		attack = 5 * level;
 		element = Random.Range (0, 4);
 		switch (element) {
 		case 0:
@@ -44,7 +44,7 @@ public class mob : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mypos = Camera.main.WorldToScreenPoint(transform.position);
-		basetextpos = new Rect(mypos.x - Boxwidth/2f, Screen.height - mypos.y - 24f - Boxheight, Boxwidth, Boxheight);
+		basetextpos = new Rect(mypos.x - Boxwidth/2f, Screen.height - mypos.y + Boxyoffset - Boxheight, Boxwidth, Boxheight);
 		textpos = new Rect();
 		GameObject elementframe = (transform.Find("element_sprite")).gameObject;
 		elementrenderer = elementframe.GetComponent<SpriteRenderer>();
@@ -70,7 +70,7 @@ public class mob : MonoBehaviour {
 		}
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 12;
+		smallfontstyle.fontSize = 16;
 		smallfontstyle.alignment = TextAnchor.LowerCenter;
 
 		levelup ();
@@ -86,11 +86,13 @@ public class mob : MonoBehaviour {
 		textpos.width = Boxwidth * hp / maxhp;
 		GUI.Box(textpos,  GUIContent.none, greenStyle);
 		textpos.x = mypos.x;
-		textpos.y = Screen.height - mypos.y - 24f;
+		textpos.y = Screen.height - mypos.y + Boxyoffset;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, hp.ToString() + " / " + maxhp.ToString(), smallfontstyle);
-		textpos.x += 50f;
-		textpos.y += 40f;
+		textpos.x += 86f;
+		textpos.y += 45f;
+		GUI.Label (textpos, "Level: " + level.ToString(), smallfontstyle);
+		textpos.y += 26f;
 		GUI.Label (textpos, "ATK: " + attack.ToString(), smallfontstyle);
 	}
 }
