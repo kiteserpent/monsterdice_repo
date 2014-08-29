@@ -239,6 +239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff83a0019fea8e49967782d07f33834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  unlockable: 0
   pips: 0
   suit: 0
   multiplier: 0
@@ -452,6 +454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff83a0019fea8e49967782d07f33834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  unlockable: 0
   pips: 0
   suit: 0
   multiplier: 0
@@ -579,6 +583,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 700964637}
   - 212: {fileID: 700964636}
+  - 114: {fileID: 700964639}
+  - 61: {fileID: 700964638}
   m_Layer: 0
   m_Name: reroll_sprite
   m_TagString: Untagged
@@ -620,6 +626,29 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!61 &700964638
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 700964635}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Size: {x: 2, y: .920000017}
+  m_Center: {x: 0, y: 0}
+--- !u!114 &700964639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 700964635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34135e5134b647344bfa5c40d3525fb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressable: 0
 --- !u!1 &710756215
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +753,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 902116687}
   - 212: {fileID: 902116686}
+  - 61: {fileID: 902116688}
+  - 114: {fileID: 902116689}
   m_Layer: 0
   m_Name: attack_sprite
   m_TagString: Untagged
@@ -765,6 +796,28 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!61 &902116688
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 902116685}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Size: {x: 2, y: .920000017}
+  m_Center: {x: 0, y: 0}
+--- !u!114 &902116689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 902116685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044fcbb87f8d6e943b4363a742801957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &998695045
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +1033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff83a0019fea8e49967782d07f33834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  unlockable: 0
   pips: 0
   suit: 0
   multiplier: 0
@@ -1163,6 +1218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff83a0019fea8e49967782d07f33834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  unlockable: 0
   pips: 0
   suit: 0
   multiplier: 0
@@ -1520,6 +1577,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff83a0019fea8e49967782d07f33834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  unlockable: 0
   pips: 0
   suit: 0
   multiplier: 0

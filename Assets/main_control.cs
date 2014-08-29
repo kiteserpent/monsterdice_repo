@@ -5,7 +5,6 @@ using System.Collections;
 public class main_control : MonoBehaviour {
 	private int health;
 	private int maxhealth;
-	private bool can_reroll;
 	private string handname = "";
 
 	private Rect textpos;
@@ -19,11 +18,12 @@ public class main_control : MonoBehaviour {
 	public die[] dice_scripts = new die[5];
 	public GameObject mob_object;
 	private mob mob_script;
+	private GameObject reroll_btn_obj;
+	private reroll_btn reroll_btn_script;
 
 	// Use this for initialization
 	void Start () {
 		health = maxhealth = 250;
-		can_reroll = true;
 		if (redTexture == null) {
 			redTexture = new Texture2D( 1, 1 );
 			redTexture.SetPixel( 0, 0, new Color(1f, 0.1f, 0.1f ));
@@ -34,6 +34,7 @@ public class main_control : MonoBehaviour {
 			redStyle.normal.background = redTexture;
 			redStyle.normal.textColor = Color.red;
 			redStyle.fontSize = 20;
+			redStyle.alignment = TextAnchor.MiddleCenter;
 		}
 		if (greenTexture == null) {
 			greenTexture = new Texture2D( 1, 1 );
@@ -61,12 +62,14 @@ public class main_control : MonoBehaviour {
 			dice_scripts[ii++] = dd.GetComponent<die>();
 		}
 		mob_script = mob_object.GetComponent<mob>();
+		reroll_btn_obj = GameObject.Find("reroll_sprite");
+		reroll_btn_script = reroll_btn_obj.GetComponent<reroll_btn>();
 
 		calculate();
 	}
 
 	void calculate() {
-		int element_index, die_index;
+		int element_index;
 		for (element_index=0; element_index<4; ++element_index) {
 			element_totals[element_index] = 0;
 		}
@@ -181,23 +184,55 @@ public class main_control : MonoBehaviour {
 		}
 	}
 
+	public void rerollPressed() {
+		foreach ( die dd in dice_scripts ) {
+			if (!dd.locked) {
+				dd.rollme();
+				dd.lockme();
+			}
+			dd.unlockable = false;
+		}
+		calculate();
+	}
 
+	public void attackPressed() {
+		int newMobHP = mob_script.hp - adjusted_totals[0] - adjusted_totals[1] - adjusted_totals[2];
+		mob_script.hp = Math.Min( Math.Max(0, newMobHP), mob_script.maxhp);
+		health = Math.Min (maxhealth, health + adjusted_totals[3]);
+		if (mob_script.hp == 0) {
+			mob_script.levelup();
+		} else {
+			health = Math.Max (0, health - mob_script.attack);
+			if (health == 0) {
+				Application.LoadLevel("game_over_scene");
+			}
+		}
+		foreach ( die dd in dice_scripts ) {
+			dd.unlockable = true;
+			dd.unlockme();
+			dd.rollme();
+		}
+		reroll_btn_script.pressable = true;
+		calculate();
+
+	}
+	
 	void Update () {
 	
 	}
 	
 	void OnGUI () {
 		calculate();
-		textpos.x = 90f;
-		textpos.y = 400f;
+		textpos.x = 95f;
+		textpos.y = 470f;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, adjusted_totals[0].ToString(), adjusted_totals[0] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 235f;
+		textpos.x = 255f;
 		GUI.Label(textpos, adjusted_totals[1].ToString(), adjusted_totals[1] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 360f;
+		textpos.x = 400f;
 		GUI.Label(textpos, adjusted_totals[2].ToString(), adjusted_totals[2] < 0 ? redStyle : smallfontstyle);
-		textpos.x = 235f;
-		textpos.y = 450f;
+		textpos.x = 255f;
+		textpos.y = 540f;
 		GUI.Label(textpos, adjusted_totals[3].ToString(), smallfontstyle);
 		textpos.x = (Screen.width - Boxwidth) / 2f;
 		textpos.y = Screen.height - 2f * Boxheight;
@@ -210,7 +245,7 @@ public class main_control : MonoBehaviour {
 		textpos.y = Screen.height - 34f;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, health.ToString() + " / " + maxhealth.ToString(), smallfontstyle);
-		textpos.y = 240f;
+		textpos.y = 300f;
 		GUI.Label(textpos, handname, bigfontstyle);
 	}
 }

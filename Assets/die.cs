@@ -3,8 +3,8 @@ using System.Collections;
 
 public class die : MonoBehaviour {
 
-	private bool locked;
-	private bool unlockable;
+	public bool locked;
+	public bool unlockable;
 	public int pips;
 	public int suit;
 	public int multiplier;
