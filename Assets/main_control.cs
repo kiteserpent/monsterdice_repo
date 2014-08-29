@@ -33,7 +33,7 @@ public class main_control : MonoBehaviour {
 			redStyle = new GUIStyle();
 			redStyle.normal.background = redTexture;
 			redStyle.normal.textColor = Color.red;
-			redStyle.fontSize = 20;
+			redStyle.fontSize = 28;
 			redStyle.alignment = TextAnchor.MiddleCenter;
 		}
 		if (greenTexture == null) {
@@ -48,11 +48,11 @@ public class main_control : MonoBehaviour {
 		textpos = new Rect();
 		bigfontstyle = new GUIStyle();
 		bigfontstyle.normal.textColor = Color.black;
-		bigfontstyle.fontSize = 24;
+		bigfontstyle.fontSize = 28;
 		bigfontstyle.alignment = TextAnchor.MiddleCenter;
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 20;
+		smallfontstyle.fontSize = 22;
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
 
 		GameObject[] dda = GameObject.FindGameObjectsWithTag("die");
@@ -227,14 +227,14 @@ public class main_control : MonoBehaviour {
 		textpos.x = 195f;
 		textpos.y = 382f;
 		textpos.width = textpos.height = 0f;
-		GUI.Label(textpos, adjusted_totals[0].ToString(), adjustment_multipliers[0] < 0 ? redStyle : smallfontstyle);
+		GUI.Label(textpos, adjusted_totals[0].ToString(), adjustment_multipliers[0] < 0 ? redStyle : bigfontstyle);
 		textpos.x = 305f;
-		GUI.Label(textpos, adjusted_totals[1].ToString(), adjustment_multipliers[1] < 0 ? redStyle : smallfontstyle);
+		GUI.Label(textpos, adjusted_totals[1].ToString(), adjustment_multipliers[1] < 0 ? redStyle : bigfontstyle);
 		textpos.x = 425f;
-		GUI.Label(textpos, adjusted_totals[2].ToString(), adjustment_multipliers[2] < 0 ? redStyle : smallfontstyle);
+		GUI.Label(textpos, adjusted_totals[2].ToString(), adjustment_multipliers[2] < 0 ? redStyle : bigfontstyle);
 		textpos.x = 195f;
 		textpos.y = 446f;
-		GUI.Label(textpos, adjusted_totals[3].ToString(), smallfontstyle);
+		GUI.Label(textpos, adjusted_totals[3].ToString(), bigfontstyle);
 		textpos.x = (Screen.width - Boxwidth) / 2f;
 		textpos.y = Screen.height - 2f * Boxheight;
 		textpos.width = Boxwidth;

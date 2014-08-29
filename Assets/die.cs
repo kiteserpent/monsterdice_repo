@@ -66,11 +66,11 @@ public class die : MonoBehaviour {
 		multiplier = 1;
 		bigfontstyle = new GUIStyle();
 		bigfontstyle.normal.textColor = Color.black;
-		bigfontstyle.fontSize = 24;
+		bigfontstyle.fontSize = 26;
 		bigfontstyle.alignment = TextAnchor.MiddleCenter;
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 14;
+		smallfontstyle.fontSize = 18;
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
 	}
 	
@@ -84,18 +84,14 @@ public class die : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		textpos.x = mypos.x + 10f;
+		textpos.x = mypos.x + 14f;
 		textpos.y = Screen.height - mypos.y - 1f;
 		string ss = pips.ToString();
 		GUI.Label(textpos, ss, bigfontstyle);
 		if (multiplier > 1) {
-			textpos.x += 10f;
+			textpos.x += 0f;
 			textpos.y += 22f;
-			GUI.Label(textpos, "x" + multiplier.ToString(), smallfontstyle);
+			GUI.Label(textpos, "x " + multiplier.ToString(), smallfontstyle);
 		}
-	}
-
-	// Update is called once per frame
-	void Update () {
 	}
 }
