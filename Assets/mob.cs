@@ -89,8 +89,8 @@ public class mob : MonoBehaviour {
 		textpos.y = Screen.height - mypos.y + Boxyoffset;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, hp.ToString() + " / " + maxhp.ToString(), fontstyle);
-		textpos.x += 90f;
-		textpos.y += 38f;
+		textpos.x += 94f;
+		textpos.y += 40f;
 		GUI.Label (textpos, "Level: " + level.ToString(), fontstyle);
 		textpos.y += 31f;
 		GUI.Label (textpos, "ATK: " + attack.ToString(), fontstyle);

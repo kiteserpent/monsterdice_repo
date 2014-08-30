@@ -33,7 +33,7 @@ public class main_control : MonoBehaviour {
 			redStyle = new GUIStyle();
 			redStyle.normal.background = redTexture;
 			redStyle.normal.textColor = Color.red;
-			redStyle.fontSize = 28;
+			redStyle.fontSize = 22;
 			redStyle.alignment = TextAnchor.MiddleCenter;
 		}
 		if (greenTexture == null) {
@@ -164,17 +164,17 @@ public class main_control : MonoBehaviour {
 		case 0:
 			adjustment_multipliers[0] = 1;
 			adjustment_multipliers[1] = 2;
-			adjustment_multipliers[2] = -1;
+			adjustment_multipliers[2] = 0;
 			break;
 		case 1:
 			adjustment_multipliers[1] = 1;
 			adjustment_multipliers[2] = 2;
-			adjustment_multipliers[0] = -1;
+			adjustment_multipliers[0] = 0;
 			break;
 		case 2:
 			adjustment_multipliers[2] = 1;
 			adjustment_multipliers[0] = 2;
-			adjustment_multipliers[1] = -1;
+			adjustment_multipliers[1] = 0;
 			break;
 		}
 		adjustment_multipliers[3] = 1; // healing is constant
@@ -227,11 +227,23 @@ public class main_control : MonoBehaviour {
 		textpos.x = 195f;
 		textpos.y = 382f;
 		textpos.width = textpos.height = 0f;
-		GUI.Label(textpos, adjusted_totals[0].ToString(), adjustment_multipliers[0] < 0 ? redStyle : bigfontstyle);
+		if (adjustment_multipliers[0] <= 0) {
+			GUI.Label(textpos, "Imm.", redStyle);
+		} else {
+			GUI.Label(textpos, adjusted_totals[0].ToString(), bigfontstyle);
+		}
 		textpos.x = 305f;
-		GUI.Label(textpos, adjusted_totals[1].ToString(), adjustment_multipliers[1] < 0 ? redStyle : bigfontstyle);
+		if (adjustment_multipliers[1] <= 0) {
+			GUI.Label(textpos, "Imm.", redStyle);
+		} else {
+			GUI.Label(textpos, adjusted_totals[1].ToString(), bigfontstyle);
+		}
 		textpos.x = 425f;
-		GUI.Label(textpos, adjusted_totals[2].ToString(), adjustment_multipliers[2] < 0 ? redStyle : bigfontstyle);
+		if (adjustment_multipliers[2] <= 0) {
+			GUI.Label(textpos, "Imm.", redStyle);
+		} else {
+			GUI.Label(textpos, adjusted_totals[2].ToString(), bigfontstyle);
+		}
 		textpos.x = 195f;
 		textpos.y = 446f;
 		GUI.Label(textpos, adjusted_totals[3].ToString(), bigfontstyle);
