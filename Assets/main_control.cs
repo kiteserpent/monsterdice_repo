@@ -20,6 +20,11 @@ public class main_control : MonoBehaviour {
 	private mob mob_script;
 	private GameObject reroll_btn_obj;
 	private reroll_btn reroll_btn_script;
+	public GameObject fire_obj;
+	public GameObject water_obj;
+	public GameObject wood_obj;
+	public GameObject immune_obj;
+	public GameObject vuln_obj;
 
 	// Use this for initialization
 	void Start () {
@@ -165,16 +170,22 @@ public class main_control : MonoBehaviour {
 			adjustment_multipliers[0] = 1;
 			adjustment_multipliers[1] = 2;
 			adjustment_multipliers[2] = 0;
+			vuln_obj.transform.position = water_obj.transform.position;
+			immune_obj.transform.position = wood_obj.transform.position;
 			break;
 		case 1:
 			adjustment_multipliers[1] = 1;
 			adjustment_multipliers[2] = 2;
 			adjustment_multipliers[0] = 0;
+			vuln_obj.transform.position = wood_obj.transform.position;
+			immune_obj.transform.position = fire_obj.transform.position;
 			break;
 		case 2:
 			adjustment_multipliers[2] = 1;
 			adjustment_multipliers[0] = 2;
 			adjustment_multipliers[1] = 0;
+			vuln_obj.transform.position = fire_obj.transform.position;
+			immune_obj.transform.position = water_obj.transform.position;
 			break;
 		}
 		adjustment_multipliers[3] = 1; // healing is constant
@@ -228,19 +239,19 @@ public class main_control : MonoBehaviour {
 		textpos.y = 382f;
 		textpos.width = textpos.height = 0f;
 		if (adjustment_multipliers[0] <= 0) {
-			GUI.Label(textpos, "Imm.", redStyle);
+			GUI.Label(textpos, "  Imm.", redStyle);
 		} else {
 			GUI.Label(textpos, adjusted_totals[0].ToString(), bigfontstyle);
 		}
 		textpos.x = 305f;
 		if (adjustment_multipliers[1] <= 0) {
-			GUI.Label(textpos, "Imm.", redStyle);
+			GUI.Label(textpos, "  Imm.", redStyle);
 		} else {
 			GUI.Label(textpos, adjusted_totals[1].ToString(), bigfontstyle);
 		}
 		textpos.x = 425f;
 		if (adjustment_multipliers[2] <= 0) {
-			GUI.Label(textpos, "Imm.", redStyle);
+			GUI.Label(textpos, "  Imm.", redStyle);
 		} else {
 			GUI.Label(textpos, adjusted_totals[2].ToString(), bigfontstyle);
 		}
