@@ -25,6 +25,8 @@ public class main_control : MonoBehaviour {
 	public GameObject wood_obj;
 	public GameObject immune_obj;
 	public GameObject vuln_obj;
+	public GameObject crossout_obj;
+	private BoxCollider2D my_collider;
 
 	// Use this for initialization
 	void Start () {
@@ -69,6 +71,7 @@ public class main_control : MonoBehaviour {
 		mob_script = mob_object.GetComponent<mob>();
 		reroll_btn_obj = GameObject.Find("reroll_sprite");
 		reroll_btn_script = reroll_btn_obj.GetComponent<reroll_btn>();
+		my_collider = GetComponent<BoxCollider2D>();
 
 		calculate();
 	}
@@ -207,16 +210,32 @@ public class main_control : MonoBehaviour {
 	}
 
 	public void attackPressed() {
+		StartCoroutine("attackPressedCoroutine");
+	}
+
+	IEnumerator attackPressedCoroutine() {
+		my_collider.enabled = true;		// eat all taps
 		int newMobHP = mob_script.hp - adjusted_totals[0] - adjusted_totals[1] - adjusted_totals[2];
 		mob_script.hp = Math.Min( Math.Max(0, newMobHP), mob_script.maxhp);
 		health = Math.Min (maxhealth, health + adjusted_totals[3]);
-		if (mob_script.hp == 0) {
+		mob_object.transform.Translate(Vector3.up * 0.15f);
+		if (mob_script.hp <= 0) {
+			crossout_obj.SetActive(true);
+		}
+		yield return new WaitForSeconds((mob_script.hp <= 0) ? 0.5f : 0.25f);
+		mob_object.transform.Translate(Vector3.down * 0.15f);
+		crossout_obj.SetActive(false);
+		if (mob_script.hp <= 0) {
 			mob_script.levelup();
 		} else {
+			yield return new WaitForSeconds(1.0f);
+			mob_object.transform.Translate(Vector3.down * 0.25f);
 			health = Math.Max (0, health - mob_script.attack);
-			if (health == 0) {
+			if (health <= 0) {
 				Application.LoadLevel("game_over_scene");
 			}
+			yield return new WaitForSeconds(0.25f);
+			mob_object.transform.Translate(Vector3.up * 0.25f);
 		}
 		foreach ( die dd in dice_scripts ) {
 			dd.unlockable = true;
@@ -225,9 +244,9 @@ public class main_control : MonoBehaviour {
 		}
 		reroll_btn_script.pressable = true;
 		calculate();
-
+		my_collider.enabled = false;
 	}
-	
+
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 			Application.Quit(); 
