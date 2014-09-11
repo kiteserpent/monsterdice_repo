@@ -6,6 +6,7 @@ public class main_control : MonoBehaviour {
 	private int health;
 	private int maxhealth;
 	private string handname = "";
+	private int calculated = -1;
 
 	private Rect textpos;
 	private const float Boxwidth = 400f, Boxheight = 24f;
@@ -85,11 +86,15 @@ public class main_control : MonoBehaviour {
 		reroll_btn_script = reroll_btn_obj.GetComponent<reroll_btn>();
 		my_collider = GetComponent<BoxCollider2D>();
 
-		Invoke("calculate", 0.1f);	// kludge to give other objects time to initialize
+		calculated = 0;
+		Invoke("calculate", 0.25f);
 	}
 
 	void calculate() {
 		int element_index;
+
+		calculated = 1;
+
 		for (element_index=0; element_index<4; ++element_index) {
 			element_totals[element_index] = 0;
 		}
@@ -230,12 +235,12 @@ public class main_control : MonoBehaviour {
 		int newMobHP = mob_script.hp - adjusted_totals[0] - adjusted_totals[1] - adjusted_totals[2];
 		mob_script.hp = Math.Min( Math.Max(0, newMobHP), mob_script.maxhp);
 		health = Math.Min (maxhealth, health + adjusted_totals[3]);
-		mob_object.transform.Translate(Vector3.up * 0.15f);
+		mob_object.transform.Translate(Vector3.up * 0.25f);
 		if (mob_script.hp <= 0) {
 			crossout_obj.SetActive(true);
 		}
 		yield return new WaitForSeconds((mob_script.hp <= 0) ? 0.5f : 0.25f);
-		mob_object.transform.Translate(Vector3.down * 0.15f);
+		mob_object.transform.Translate(Vector3.down * 0.25f);
 		crossout_obj.SetActive(false);
 		if (mob_script.hp <= 0) {
 			mob_script.levelup();
@@ -265,6 +270,9 @@ public class main_control : MonoBehaviour {
 	}
 
 	void OnGUI () {
+		if (calculated == 0) {
+			calculate();
+		}
 		GUI.matrix = guiMatrix;
 		textpos.x = 195f;
 		textpos.y = 382f;

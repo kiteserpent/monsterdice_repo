@@ -8,7 +8,7 @@ public class mob : MonoBehaviour {
 	public int level;
 	public int attack;
 	public int element;
-	private float Boxwidth = 150f, Boxheight = 28f, Boxyoffset = -60f;
+	private float Boxwidth = 150f, Boxheight = 28f, Boxyoffset = -70f;
 	private static Texture2D redTexture, greenTexture;
 	private static GUIStyle redStyle, greenStyle, fontstyle;
 	private static Vector3 mypos;
@@ -25,7 +25,7 @@ public class mob : MonoBehaviour {
 		maxhp = 10 * level;
 		hp = maxhp;
 		attack = 5 * level;
-		element = Random.Range (0, 4);
+		element = Random.Range (0, 3);
 		switch (element) {
 		case 0:
 			myrenderer.sprite = mob0;

@@ -5,6 +5,10 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+monsterdice_Data/
+monsterdice.apk
+monsterdice.exe
+monsterdice.zip
  
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
