@@ -17,6 +17,7 @@ public class die : MonoBehaviour {
 	private GUIStyle smallfontstyle = null;
 
 	public Sprite suit0, suit1, suit2, suit3;
+	private float spriteScale = 1f;
 
 	public void lockme() {
 		locked = true;
@@ -51,7 +52,17 @@ public class die : MonoBehaviour {
 			break;
 		}
 	}
-	
+
+	void Awake () {
+		float xScale = Screen.width / 480f;
+		float yScale = Screen.height / 800f;
+		spriteScale = Mathf.Min(xScale, yScale);
+
+		if (spriteScale > 1f) {
+			gameObject.transform.localScale = new Vector3(spriteScale, spriteScale, 1f);
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		lockframe = (transform.Find("locked_sprite")).gameObject;
@@ -66,11 +77,11 @@ public class die : MonoBehaviour {
 		multiplier = 1;
 		bigfontstyle = new GUIStyle();
 		bigfontstyle.normal.textColor = Color.black;
-		bigfontstyle.fontSize = 26;
+		bigfontstyle.fontSize = (int)(28f * spriteScale);
 		bigfontstyle.alignment = TextAnchor.MiddleCenter;
 		smallfontstyle = new GUIStyle();
 		smallfontstyle.normal.textColor = Color.black;
-		smallfontstyle.fontSize = 18;
+		smallfontstyle.fontSize = (int)(20f * spriteScale);
 		smallfontstyle.alignment = TextAnchor.MiddleCenter;
 	}
 	
@@ -84,13 +95,12 @@ public class die : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		textpos.x = mypos.x + 14f;
-		textpos.y = Screen.height - mypos.y - 1f;
+		textpos.x = mypos.x + 14f * spriteScale;
+		textpos.y = Screen.height - mypos.y - spriteScale;
 		string ss = pips.ToString();
 		GUI.Label(textpos, ss, bigfontstyle);
 		if (multiplier > 1) {
-			textpos.x += 0f;
-			textpos.y += 22f;
+			textpos.y += 22f * spriteScale;
 			GUI.Label(textpos, "x " + multiplier.ToString(), smallfontstyle);
 		}
 	}

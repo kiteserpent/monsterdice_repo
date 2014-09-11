@@ -8,7 +8,7 @@ public class mob : MonoBehaviour {
 	public int level;
 	public int attack;
 	public int element;
-	private const float Boxwidth = 150f, Boxheight = 28f, Boxyoffset = -60f;
+	private float Boxwidth = 150f, Boxheight = 28f, Boxyoffset = -60f;
 	private static Texture2D redTexture, greenTexture;
 	private static GUIStyle redStyle, greenStyle, fontstyle;
 	private static Vector3 mypos;
@@ -17,6 +17,7 @@ public class mob : MonoBehaviour {
 	
 	public Sprite mob0, mob1, mob2;
 	public Sprite element0, element1, element2;
+	private float spriteScale = 1f;
 
 	public void levelup() {
 		SpriteRenderer myrenderer = GetComponent<SpriteRenderer>();
@@ -41,6 +42,19 @@ public class mob : MonoBehaviour {
 		}
 	}
 
+	void Awake () {
+		float xScale = Screen.width / 480f;
+		float yScale = Screen.height / 800f;
+		spriteScale = Mathf.Min(xScale, yScale);
+
+		if (spriteScale > 1f) {
+			gameObject.transform.localScale = new Vector3(spriteScale, spriteScale, 1f);
+		}
+		Boxwidth *= spriteScale;
+		Boxheight *= spriteScale;
+		Boxyoffset *= spriteScale;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		mypos = Camera.main.WorldToScreenPoint(transform.position);
@@ -70,7 +84,7 @@ public class mob : MonoBehaviour {
 		}
 		fontstyle = new GUIStyle();
 		fontstyle.normal.textColor = Color.black;
-		fontstyle.fontSize = 26;
+		fontstyle.fontSize = (int)(28f * spriteScale);
 		fontstyle.alignment = TextAnchor.LowerCenter;
 
 		levelup ();
@@ -89,10 +103,10 @@ public class mob : MonoBehaviour {
 		textpos.y = Screen.height - mypos.y + Boxyoffset;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, hp.ToString() + " / " + maxhp.ToString(), fontstyle);
-		textpos.x += 94f;
-		textpos.y += 40f;
+		textpos.x += 94f * spriteScale;
+		textpos.y += 40f * spriteScale;
 		GUI.Label (textpos, "Level: " + level.ToString(), fontstyle);
-		textpos.y += 31f;
+		textpos.y += 31f * spriteScale;
 		GUI.Label (textpos, "ATK: " + attack.ToString(), fontstyle);
 	}
 }

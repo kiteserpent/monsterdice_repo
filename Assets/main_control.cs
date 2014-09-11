@@ -27,7 +27,19 @@ public class main_control : MonoBehaviour {
 	public GameObject vuln_obj;
 	public GameObject crossout_obj;
 	private BoxCollider2D my_collider;
+	private float spriteScale = 1f;
+	private Matrix4x4 guiMatrix;
 
+	void Awake () {
+		float xScale = Screen.width / 480f;
+		float yScale = Screen.height / 800f;
+		spriteScale = Mathf.Min(xScale, yScale);
+		guiMatrix = Matrix4x4.TRS(
+			Vector3.zero,
+			Quaternion.AngleAxis(0, new Vector3(0, 1, 0)),
+			new Vector3(xScale, yScale, 1));
+	}
+	
 	// Use this for initialization
 	void Start () {
 		health = maxhealth = 250;
@@ -73,7 +85,7 @@ public class main_control : MonoBehaviour {
 		reroll_btn_script = reroll_btn_obj.GetComponent<reroll_btn>();
 		my_collider = GetComponent<BoxCollider2D>();
 
-		calculate();
+		Invoke("calculate", 0.1f);	// kludge to give other objects time to initialize
 	}
 
 	void calculate() {
@@ -253,7 +265,7 @@ public class main_control : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		calculate();
+		GUI.matrix = guiMatrix;
 		textpos.x = 195f;
 		textpos.y = 382f;
 		textpos.width = textpos.height = 0f;
@@ -277,15 +289,15 @@ public class main_control : MonoBehaviour {
 		textpos.x = 195f;
 		textpos.y = 446f;
 		GUI.Label(textpos, adjusted_totals[3].ToString(), bigfontstyle);
-		textpos.x = (Screen.width - Boxwidth) / 2f;
-		textpos.y = Screen.height - 2f * Boxheight;
+		textpos.x = (480f - Boxwidth) / 2f;
+		textpos.y = 800f - 2f * Boxheight;
 		textpos.width = Boxwidth;
 		textpos.height = Boxheight;
 		GUI.Box(textpos,  GUIContent.none, redStyle);
 		textpos.width = Boxwidth * health / maxhealth;
 		GUI.Box(textpos,  GUIContent.none, greenStyle);
-		textpos.x = Screen.width / 2f;
-		textpos.y = Screen.height - 35f;
+		textpos.x = 240f;
+		textpos.y = 800f - 35f;
 		textpos.width = textpos.height = 0f;
 		GUI.Label(textpos, health.ToString() + " / " + maxhealth.ToString(), smallfontstyle);
 		textpos.y = 498f;
