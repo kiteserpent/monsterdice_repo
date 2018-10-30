@@ -8,6 +8,6 @@ public class guitext_rescale : MonoBehaviour {
 		float xScale = Screen.width / 480f;
 		float yScale = Screen.height / 800f;
 		float spriteScale = Mathf.Min(xScale, yScale);
-		gameObject.guiText.fontSize = (int)(0.9f + (float)gameObject.guiText.fontSize * spriteScale);
+		gameObject.GetComponent<GUIText>().fontSize = (int)(0.9f + (float)gameObject.GetComponent<GUIText>().fontSize * spriteScale);
 	}
 }
